@@ -9,7 +9,8 @@ async function supabase(path, options = {}) {
   const text = await response.text(); let body = null; try { body = text ? JSON.parse(text) : null; } catch { body = { message: text }; }
   if (!response.ok) {
     console.error("Supabase candidates request failed", { status: response.status, statusText: response.statusText, path, body });
-    throw new Error("Database request failed.");
+    const detail = body?.message || body?.hint || body?.details || body?.code || response.statusText || "Unknown database error";
+    throw new Error(`Supabase ${response.status}: ${detail}`);
   }
   return body;
 }
@@ -32,5 +33,8 @@ export default async function handler(req, res) {
     const rows = await supabase("candidates", { method: "POST", body: JSON.stringify(record) });
     await audit("candidate.create", session, { candidate_id: record.id });
     return res.status(201).json({ configured: true, candidate: mapCandidate(rows[0]) });
-  } catch (error) { console.error("Candidate API error:", error); return res.status(500).json({ error: "Candidate database operation failed." }); }
+  } catch (error) {
+    console.error("Candidate API error:", error);
+    return res.status(500).json({ error: error.message || "Candidate database operation failed." });
+  }
 }
