@@ -1,4 +1,4 @@
-import { authConfigured, requireAuth, sameOrigin, checkRateLimit, securityHeaders, audit, validateCandidate } from "./_security.js";
+import { configured as authConfigured, requireAuth, sameOrigin, checkRateLimit, securityHeaders, audit, validateCandidate } from "./_security.js";
 
 function databaseConfigured() { return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY); }
 function mapCandidate(row) {
