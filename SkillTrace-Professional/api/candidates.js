@@ -1,4 +1,4 @@
-import { configured as authConfigured, requireAuth, sameOrigin, checkRateLimit, securityHeaders, audit, validateCandidate } from "./_security.js";
+import { authConfigured, requireAuth, sameOrigin, checkRateLimit, securityHeaders, audit, validateCandidate } from "./_security.js";
 
 function databaseConfigured() { return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY); }
 function mapCandidate(row) {
@@ -7,7 +7,11 @@ function mapCandidate(row) {
 async function supabase(path, options = {}) {
   const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/${path}`, { ...options, headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": "application/json", Prefer: "return=representation", ...(options.headers || {}) } });
   const text = await response.text(); let body = null; try { body = text ? JSON.parse(text) : null; } catch { body = { message: text }; }
-  if (!response.ok) throw new Error("Database request failed."); return body;
+  if (!response.ok) {
+    console.error("Supabase candidates request failed", { status: response.status, statusText: response.statusText, path, body });
+    throw new Error("Database request failed.");
+  }
+  return body;
 }
 export default async function handler(req, res) {
   securityHeaders(res);
