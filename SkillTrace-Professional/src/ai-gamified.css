@@ -1,0 +1,12 @@
+/* SkillTrace AI — minimal career-game presentation */
+.ai-panel{margin-top:22px!important;padding:20px!important;border-radius:18px!important}
+.ai-panel .ai-title{margin-bottom:14px!important}
+.ai-panel>p{margin:0 0 16px!important;line-height:1.6!important;opacity:.72}
+.ai-panel .ai-btn{margin-top:2px!important}
+.ai-result{margin-top:20px!important;padding:0!important;background:transparent!important;border:0!important;display:flex;flex-direction:column;gap:10px}
+.ai-result .result-label{margin:0 0 4px!important;padding:0!important;font-size:11px!important;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.ai-result pre{margin:0!important;padding:0!important;background:transparent!important;border:0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;font-family:inherit!important;font-size:13px!important;line-height:1.85!important;color:inherit!important}
+.ai-result pre::first-line{font-weight:700}
+/* Give each AI level breathing room without changing the result content. */
+.ai-result pre{word-spacing:.02em}
+.ai-result pre br{line-height:2.4}
