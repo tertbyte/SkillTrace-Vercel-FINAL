@@ -10,7 +10,7 @@ export default function UserPortal({onGovernment}){
  return <CandidateDashboard profile={profile} update={update} step={step} setStep={setStep} loading={loading} analyze={analyze} result={result} analysisNotice={analysisNotice} onGovernment={onGovernment} onLogout={()=>{setLogged(false);setStep(0);setResult("");}}/>}
 }
 function CandidateDashboard({profile,update,step,setStep,loading,analyze,result,analysisNotice,onGovernment,onLogout}){
- const [page,setPage]=useState("overview"),[mobile,setMobile]=useState(false);
+ const [page,setPage]=useState("profile"),[mobile,setMobile]=useState(false);
  const skills=profile.skills.split(",").map(x=>x.trim()).filter(Boolean);
  const nav=[["overview","Overview",LayoutDashboard],["profile","My Profile",User],["training","Training",BookOpen],["skills","Skills",BrainCircuit],["career","Career",BriefcaseBusiness]];
  const go=p=>{setPage(p);setMobile(false)};
@@ -35,15 +35,31 @@ function CandidateDashboard({profile,update,step,setStep,loading,analyze,result,
  </div>
 }
 function Overview({profile,skills,setPage,setStep}){
- return <><section className="candidate-welcome"><div><div className="candidate-kicker">YOUR SKILL JOURNEY</div><h1>Build your career with SkillTrace.</h1><p>Track your training, grow your skills and plan your next step.</p></div><button onClick={()=>setPage("profile")}><Edit3/> Update profile</button></section>
- <section className="candidate-stats"><div><span>Profile</span><b>{profile.name?"Complete":"Start"}</b><small>{profile.name?"Your basic details are added.":"Add your details to begin."}</small></div><div><span>Skills</span><b>{skills.length}</b><small>{skills.length?"Skills added":"Add your current skills."}</small></div><div><span>Career goal</span><b>{profile.goal}</b><small>Current target</small></div></section>
- <section className="candidate-grid"><div className="candidate-panel"><div className="panel-title"><div><span>Career progress</span><h3>Your journey</h3></div><TrendingUp/></div><div className="progress-track"><i style={{width:profile.name&&profile.training?skills.length?"72%":"48%":"20%"}}/></div><div className="progress-labels"><span>Profile</span><span>Training</span><span>Skills</span><span>Career</span></div></div>
- <div className="candidate-panel action-panel"><div className="panel-title"><div><span>Next step</span><h3>Run your skill analysis</h3></div><Sparkles/></div><p>Find what to learn next based on your skills and career goal.</p><button onClick={()=>{setStep(1);setPage("skills")}}>Start analysis <ArrowRight/></button></div></section>
- <section className="candidate-panel"><div className="panel-title"><div><span>Quick view</span><h3>What is in your profile</h3></div></div><div className="quick-list"><div><CheckCircle2/>Training <b>{profile.training||"Not added"}</b></div><div><GraduationCap/>Education <b>{profile.education||"Not added"}</b></div><div><Target/>Career goal <b>{profile.goal}</b></div></div></section></>
+ return <ProfilePage profile={profile} update={()=>{}}/>
 }
 function ProfilePage({profile,update}){
- return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>MY PROFILE</span><h3>Your details</h3></div><User/></div><div className="profile-grid"><label>Full name<input value={profile.name} onChange={e=>update("name",e.target.value)} placeholder="Your name"/></label><label>Education<input value={profile.education} onChange={e=>update("education",e.target.value)} placeholder="BCA / MCA"/></label><label>Training completed<input value={profile.training} onChange={e=>update("training",e.target.value)} placeholder="Training name"/></label><label>Career goal<select value={profile.goal} onChange={e=>update("goal",e.target.value)}><option>Data Analyst</option><option>Software Developer</option><option>Cloud Support</option><option>Cybersecurity Analyst</option><option>Digital Marketing</option></select></label></div><div className="save-note"><CheckCircle2/> Changes are saved for this session.</div></section>
+ const [tab,setTab]=useState("account");
+ return <section className="profile-shell">
+  <div className="profile-cover"><div className="cover-pattern"/><div className="profile-cover-label">SKILLTRACE CANDIDATE PROFILE</div></div>
+  <div className="profile-layout">
+   <aside className="profile-summary">
+    <div className="profile-avatar">{(profile.name||"C").slice(0,1).toUpperCase()}</div>
+    <h3>{profile.name||"Candidate"}</h3>
+    <p>{profile.goal||"Career goal not set"}</p>
+    <div className="profile-mini-stats"><div><b>{skillsCount(profile.skills)}</b><span>Skills</span></div><div><b>{profile.training?"1":"0"}</b><span>Training</span></div><div><b>{profile.education?"✓":"—"}</b><span>Education</span></div></div>
+    <button className="profile-public">View candidate profile</button>
+   </aside>
+   <div className="profile-details">
+    <div className="profile-tabs">{[["account","Profile"],["training","Training"],["skills","Skills"],["career","Career"]].map(([id,label])=><button className={tab===id?"active":""} onClick={()=>setTab(id)} key={id}>{label}</button>)}</div>
+    {tab==="account"&&<div className="profile-form"><div className="profile-form-head"><div><span>ACCOUNT DETAILS</span><h3>Profile information</h3></div><User/></div><div className="profile-fields"><label>Full name<input value={profile.name} onChange={e=>update("name",e.target.value)} placeholder="Your full name"/></label><label>Career goal<select value={profile.goal} onChange={e=>update("goal",e.target.value)}><option>Data Analyst</option><option>Software Developer</option><option>Cloud Support</option><option>Cybersecurity Analyst</option><option>Digital Marketing</option></select></label><label>Education<input value={profile.education} onChange={e=>update("education",e.target.value)} placeholder="BCA / MCA"/></label><label>Training completed<input value={profile.training} onChange={e=>update("training",e.target.value)} placeholder="Training name"/></label></div><button className="profile-update">Update profile</button></div>}
+    {tab==="training"&&<div className="profile-form"><div className="profile-form-head"><div><span>LEARNING RECORD</span><h3>Training</h3></div><BookOpen/></div><div className="profile-record"><b>{profile.training||"No training added"}</b><span>{profile.training?"Completed":"Add your training in Profile."}</span></div></div>}
+    {tab==="skills"&&<div className="profile-form"><div className="profile-form-head"><div><span>SKILLS</span><h3>Your skills</h3></div><BrainCircuit/></div><label className="skills-edit">Current skills<input value={profile.skills} onChange={e=>update("skills",e.target.value)} placeholder="Python, Excel, SQL"/></label><div className="skill-chips">{(profile.skills.split(",").map(x=>x.trim()).filter(Boolean)).map((x,i)=><span key={i}>{x}</span>)}</div></div>}
+    {tab==="career"&&<div className="profile-form"><div className="profile-form-head"><div><span>CAREER</span><h3>{profile.goal}</h3></div><BriefcaseBusiness/></div><div className="career-focus"><span>Current goal</span><b>{profile.goal}</b><p>Build practical skills and projects for this career path.</p></div><button className="profile-update" onClick={()=>setStep(2)}>Get next steps</button></div>}
+   </div>
+  </div>
+ </section>
 }
+function skillsCount(value){return value.split(",").map(x=>x.trim()).filter(Boolean).length}
 function TrainingPage({profile}){
  return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>TRAINING</span><h3>Your learning record</h3></div><BookOpen/></div><div className="training-card"><div className="status-dot"><CheckCircle2/></div><div><b>{profile.training||"Training not added yet"}</b><p>{profile.training?"Training completed":"Add your completed training in My Profile."}</p></div><span>{profile.training?"Completed":"Pending"}</span></div><div className="timeline"><div><i/><b>Training</b><span>{profile.training||"Not added"}</span></div><div><i/><b>Skills</b><span>Build and improve your skills</span></div><div><i/><b>Career</b><span>Move towards your career goal</span></div></div></section>
 }
