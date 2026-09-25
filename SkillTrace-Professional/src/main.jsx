@@ -4,4 +4,5 @@ import App from "./App";
 import SecurityGate from "./SecurityGate";
 import "./styles.css";
 import "./ai-gamified.css";
+import "./user-portal.css";
 createRoot(document.getElementById("root")).render(<React.StrictMode><SecurityGate><App/></SecurityGate></React.StrictMode>);
