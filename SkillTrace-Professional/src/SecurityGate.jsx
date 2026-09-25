@@ -16,3 +16,4 @@ const card={width:"min(410px,100%)",background:"#0d1929",border:"1px solid #1d30
 const logo={width:44,height:44,borderRadius:13,display:"grid",placeItems:"center",background:"linear-gradient(135deg,#7af1c8,#5689ff)",color:"#06111e",fontWeight:800,fontSize:22,marginBottom:18};
 const input={width:"100%",padding:"12px 13px",borderRadius:10,border:"1px solid #1d3045",background:"#091625",color:"#edf4fb",outline:"none",fontSize:12};
 const button={border:0,borderRadius:10,padding:12,background:"#e7f6f0",color:"#07151c",fontWeight:800,cursor:"pointer"};
+const tabs={display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,padding:4,background:"#091625",borderRadius:12,marginBottom:22};
