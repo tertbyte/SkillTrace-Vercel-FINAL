@@ -17,20 +17,13 @@ Training: ${clean(c.training)}
 Education: ${clean(c.education)}
 Skills: ${skills.join(", ")}
 Career goal: ${clean(c.role)}
-Return exactly six short levels:
-LEVEL 1 — PROFILE CHECK
-• one short observation
-LEVEL 2 — MATCH STRENGTH
-• one short observation
-LEVEL 3 — SKILL GAPS
-• up to 2 gaps
+Return exactly six levels. Use very simple everyday English. Each level must be ONE short sentence, maximum 12 words. Do not use bullets, symbols, scores, tables, or escaped newline text.
+LEVEL 1 — PROFILE
+LEVEL 2 — GOOD START
+LEVEL 3 — NEED TO LEARN
 LEVEL 4 — NEXT 3 SKILLS
-• exactly 3 skills
-LEVEL 5 — CAREER DIRECTION
-• one direction
-LEVEL 6 — NEXT MISSION
-• one practical action
-Keep it simple, encouraging and concise. No tables, scores, or long paragraphs.`;
+LEVEL 5 — CAREER PATH
+LEVEL 6 — NEXT STEP`;
   const r=await openai.responses.create({model:"gpt-5.6-luna",input:prompt,max_output_tokens:500});
   return res.status(200).json({result:r.output_text});
  }catch(e){console.error("Candidate AI error:",e);return res.status(500).json({error:"AI analysis failed."})}
