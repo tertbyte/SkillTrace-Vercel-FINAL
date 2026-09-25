@@ -10,10 +10,11 @@ export default function UserPortal({onGovernment}){
  return <CandidateDashboard email={email} profile={profile} update={update} step={step} setStep={setStep} loading={loading} analyze={analyze} result={result} analysisNotice={analysisNotice} onGovernment={onGovernment} onLogout={()=>{setLogged(false);setStep(0);setResult("");}}/>}
 }
 function CandidateDashboard({email,profile,update,step,setStep,loading,analyze,result,analysisNotice,onGovernment,onLogout}){
- const [page,setPage]=useState("profile"),[mobile,setMobile]=useState(false);
+ const [page,setPage]=useState("personal"),[mobile,setMobile]=useState(false);
  const skills=profile.skills.split(",").map(x=>x.trim()).filter(Boolean);
  const nav=[["overview","Overview",LayoutDashboard],["profile","My Profile",User],["training","Training",BookOpen],["skills","Skills",BrainCircuit],["career","Career",BriefcaseBusiness]];
  const go=p=>{setPage(p);setMobile(false)};
+ if(page==="personal") return <PersonalLanding profile={profile} email={email} onContinue={()=>setPage("overview")} onGovernment={onGovernment} onLogout={onLogout}/>;
  return <div className="candidate-app">
   <aside className={mobile?"candidate-sidebar open":"candidate-sidebar"}>
    <div className="candidate-side-brand"><span>S</span><div><b>SkillTrace</b><small>Candidate Portal</small></div><button className="side-close" onClick={()=>setMobile(false)}><X/></button></div>
@@ -32,6 +33,22 @@ function CandidateDashboard({email,profile,update,step,setStep,loading,analyze,r
     {step===2&&<AnalysisPanel result={result} notice={analysisNotice} onEdit={()=>{setStep(1);setPage("skills")}}/>}
    </main>
   </div>
+ </div>
+}
+function PersonalLanding({profile,email,onContinue,onGovernment,onLogout}){
+ const skills=profile.skills.split(",").map(x=>x.trim()).filter(Boolean);
+ return <div className="personal-page">
+  <header className="personal-header"><div className="candidate-side-brand"><span>S</span><div><b>SkillTrace</b><small>Candidate Portal</small></div></div><button onClick={onGovernment}>Government portal</button></header>
+  <main className="personal-main">
+   <div className="personal-welcome"><span>WELCOME</span><h1>Hi, {profile.name||"Candidate"}</h1><p>Your personal SkillTrace profile is ready.</p></div>
+   <section className="personal-card">
+    <div className="personal-avatar">{(profile.name||"C").slice(0,1).toUpperCase()}</div>
+    <div className="personal-info"><span>YOUR PROFILE</span><h2>{profile.name||"Candidate"}</h2><p>{email||"Candidate account"}</p>
+     <div className="personal-details"><div><small>Career goal</small><b>{profile.goal||"Not set"}</b></div><div><small>Education</small><b>{profile.education||"Not added"}</b></div><div><small>Training</small><b>{profile.training||"Not added"}</b></div><div><small>Skills</small><b>{skills.length?skills.join(", "):"Not added"}</b></div></div>
+    </div>
+   </section>
+   <div className="personal-actions"><button className="personal-primary" onClick={onContinue}>Go to my dashboard <ArrowRight/></button><button className="personal-secondary" onClick={onLogout}>Sign out</button></div>
+  </main>
  </div>
 }
 function Overview({profile,skills,setPage,setStep}){
