@@ -27,7 +27,7 @@ function CandidateDashboard({profile,update,step,setStep,loading,analyze,result,
     {page==="overview"&&<Overview profile={profile} skills={skills} setPage={go} setStep={setStep} />}
     {page==="profile"&&<ProfilePage profile={profile} update={update}/>}
     {page==="training"&&<TrainingPage profile={profile}/>}
-    {page==="skills"&&<SkillsPage profile={profile} skills={skills} update={update} setPage={go} setStep={setStep}/>}
+    {page==="skills"&&<SkillsPage profile={profile} skills={skills} update={update} setPage={go} setStep={setStep} analyze={analyze} loading={loading}/>}
     {page==="career"&&<CareerPage profile={profile} setPage={go} setStep={setStep}/>}
     {step===2&&<AnalysisPanel result={result} notice={analysisNotice} onEdit={()=>{setStep(1);setPage("skills")}}/>}
    </main>
@@ -47,11 +47,11 @@ function ProfilePage({profile,update}){
 function TrainingPage({profile}){
  return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>TRAINING</span><h3>Your learning record</h3></div><BookOpen/></div><div className="training-card"><div className="status-dot"><CheckCircle2/></div><div><b>{profile.training||"Training not added yet"}</b><p>{profile.training?"Training completed":"Add your completed training in My Profile."}</p></div><span>{profile.training?"Completed":"Pending"}</span></div><div className="timeline"><div><i/><b>Training</b><span>{profile.training||"Not added"}</span></div><div><i/><b>Skills</b><span>Build and improve your skills</span></div><div><i/><b>Career</b><span>Move towards your career goal</span></div></div></section>
 }
-function SkillsPage({profile,skills,update,setPage,setStep}){
- return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>SKILLS</span><h3>Your skill set</h3></div><BrainCircuit/></div><label className="wide-label">Current skills<input value={profile.skills} onChange={e=>update("skills",e.target.value)} placeholder="Python, Excel, SQL"/></label><div className="skill-chips">{(skills.length?skills:["No skills added"]).map((x,i)=><span key={i}>{x}</span>)}</div><div className="analysis-cta"><div><b>Need a clear plan?</b><p>Run SkillTrace analysis to see your next skills.</p></div><button onClick={()=>{setStep(2);setPage("skills")}}>Run analysis <Sparkles/></button></div></section>
+function SkillsPage({profile,skills,update,setPage,setStep,analyze,loading}){
+ return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>SKILLS</span><h3>Your skill set</h3></div><BrainCircuit/></div><label className="wide-label">Current skills<input value={profile.skills} onChange={e=>update("skills",e.target.value)} placeholder="Python, Excel, SQL"/></label><div className="skill-chips">{(skills.length?skills:["No skills added"]).map((x,i)=><span key={i}>{x}</span>)}</div><div className="analysis-cta"><div><b>Need a clear plan?</b><p>Run SkillTrace analysis to see your next skills.</p></div><button onClick={analyze} disabled={loading}>{loading?"Analyzing…":"Run analysis"} <Sparkles/></button></div></section>
 }
 function CareerPage({profile,setPage,setStep}){
- return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>CAREER</span><h3>Your career direction</h3></div><BriefcaseBusiness/></div><div className="career-focus"><span>Current goal</span><b>{profile.goal}</b><p>Build practical skills and projects for this path.</p></div><div className="career-steps"><div><b>1</b><span>Learn</span><small>Build the key skills.</small></div><div><b>2</b><span>Build</span><small>Create real projects.</small></div><div><b>3</b><span>Apply</span><small>Prepare for opportunities.</small></div></div><button className="user-primary" onClick={()=>{setStep(2);setPage("skills")}}>Get my next steps <ArrowRight/></button></section>
+ return <section className="candidate-panel page-panel"><div className="panel-title"><div><span>CAREER</span><h3>Your career direction</h3></div><BriefcaseBusiness/></div><div className="career-focus"><span>Current goal</span><b>{profile.goal}</b><p>Build practical skills and projects for this path.</p></div><div className="career-steps"><div><b>1</b><span>Learn</span><small>Build the key skills.</small></div><div><b>2</b><span>Build</span><small>Create real projects.</small></div><div><b>3</b><span>Apply</span><small>Prepare for opportunities.</small></div></div><button className="user-primary" onClick={()=>{setPage("skills");setStep(1)}}>Go to skills <ArrowRight/></button></section>
 }
 function AnalysisPanel({result,notice,onEdit}){
  const blocks=result.replace(/\\n/g,"\n").split(/(?=LEVEL \d)/).filter(Boolean);
