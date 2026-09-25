@@ -27,3 +27,4 @@
 .gov-auth-form button:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.22)}
 .gov-auth-form button:not(:disabled):active{transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.user-portal,.auth-main,.auth-card,.gov-auth-card,.user-brand>span,.gov-auth-logo{animation:none}.auth-card:hover{transform:none}}
+.user-card input:-webkit-autofill,.user-card input:-webkit-autofill:hover,.user-card input:-webkit-autofill:focus{border:1px solid #1d3045;-webkit-text-fill-color:#edf4fb;caret-color:#edf4fb;box-shadow:0 0 0 1000px #081423 inset;transition:background-color 9999s ease-in-out 0s}.auth-card form{margin:0}.auth-card .privacy{margin-top:14px}.auth-error{line-height:1.5}
